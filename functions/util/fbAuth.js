@@ -1,6 +1,6 @@
-const { admin } = require('./admin')
-
 // MIDDLEWARE: check if user is signed in (authenticated)
+const { admin, db } = require('./admin')
+
 module.exports = (req, res, next) => {
 	let idToken;
 	if(req.headers.authorization && req.headers.authorization.startsWith('Bearer ')){
@@ -17,7 +17,8 @@ module.exports = (req, res, next) => {
 		.then(decodedToken => {
 			req.user = decodedToken;
 			console.log(decodedToken);
-			return db.collection('users')
+			return db
+				.collection('users')
 				.where('userId', '==', req.user.uid)
 				.limit(1)
 				.get();

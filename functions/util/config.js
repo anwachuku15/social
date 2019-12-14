@@ -1,3 +1,4 @@
+// Firebase Configuration
 module.exports = {
   apiKey: "AIzaSyD-wiJ0MiZc1yTVa-07Y2owWQTfQsXf8n0",
   authDomain: "social-3be8a.firebaseapp.com",
