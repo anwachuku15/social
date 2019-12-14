@@ -20,7 +20,8 @@ firebase.initializeApp(firebaseConfig);
 
 const db = admin.firestore();
 
-// GET DOCUMENTS ROUTE
+
+// GET POSTS ROUTE
 app.get('/posts', (req, res) => {
 	db.collection('posts')
 		.orderBy('createdAt', 'desc')
@@ -41,11 +42,49 @@ app.get('/posts', (req, res) => {
 		.catch(err => console.error(err));
 })
 
-// CREATE DOCUMENTS ROUTE
-app.post('/post', (req, res) => {
+
+// MIDDLEWARE: check if user is signed in (authenticated)
+const FBAuth = (req, res, next) => {
+	let idToken;
+	if(req.headers.authorization && req.headers.authorization.startsWith('Bearer ')){
+		idToken = req.headers.authorization.split('Bearer ')[1];
+	} else {
+		console.error('No token found')
+		return res.status(403).json({ error: 'Unauthorized'});
+	}
+
+	admin.auth().verifyIdToken(idToken)
+		// attach token to req.user
+		.then(decodedToken => {
+			req.user = decodedToken;
+			console.log(decodedToken);
+			return db.collection('users')
+				.where('userId', '==', req.user.uid)
+				.limit(1)
+				.get();
+		})
+		// attach user handle to req.user
+		.then(data => {
+			req.user.handle = data.docs[0].data().handle;
+			return next();
+		})
+		.catch(err => {
+			console.error('Error while verifying token ', err);
+			return res.status(403).json(err);
+		})
+}
+
+
+// CREATE POST ROUTE
+app.post('/post', FBAuth, (req, res) => {
+	if (req.body.body.trim() === '') {
+		return res.status(400).json({ body: 'Body must not be empty'})
+	}
+
 	const newPost = {
 		body: req.body.body,
-		userHandle: req.body.userHandle,
+		// userHandle is passed through MIDDLEWARE
+		userHandle: req.user.handle,
 		createdAt: new Date().toISOString()
 	};
 
@@ -58,12 +97,13 @@ app.post('/post', (req, res) => {
 			res.status(500).json({ error: 'something went wrong'});
 			console.error(err);
 		})
-	
+
 });
 
 
-// HELPER FUNCTIONS: is email empty
-//                   is email valid
+// HELPER FUNCTIONS: 
+// is email empty
+// is email valid
 const isEmpty = (string) => {
 	if(string.trim() === '') return true;
 	else return false;
@@ -162,7 +202,7 @@ app.post('/login', (req, res) => {
 		.then(data => {
 			return data.user.getIdToken();
 		})
-		.then(token => {
+		.then(token => { 
 			return res.json({token})
 		})
 		.catch(err => {
