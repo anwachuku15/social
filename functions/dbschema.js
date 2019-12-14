@@ -9,3 +9,5 @@ let db = {
     }
   ]
 }
+
+// Firebase charges you based on number of reads, so best practice is to minimize reads
