@@ -5,7 +5,9 @@ const fbAuth = require('./util/fbAuth');
 const { getPosts, 
         createPost,
         getPost ,
-        commentOnPost
+        commentOnPost,
+        likePost,
+        unlikePost
 } = require('./handlers/posts');
 
 const { signup, 
@@ -22,9 +24,12 @@ app.get('/posts', getPosts)
 app.post('/post', fbAuth, createPost)
 app.get('/post/:postId', getPost);
 // TODO: delete post
-// TODO: like post
-// TODO: unlike post
+app.get('/post/:postId/like', fbAuth, likePost)
+app.get('/post/:postId/unlike', fbAuth, unlikePost)
 app.post('/post/:postId/comment', fbAuth, commentOnPost)
+// TODO: like comment
+// TODO: unlike comment
+// TODO: comment on comment, etc
 
 
 // USERS ROUTES
