@@ -1,8 +1,6 @@
 // VALIDATIONS
 
 // HELPER FUNCTIONS: 
-// is email empty
-// is email valid
 const isEmpty = (string) => {
 	if(string.trim() === '') return true;
 	else return false;
@@ -14,6 +12,7 @@ const isEmail = (email) => {
 	else return false;
 };
 
+// Sign Up Validation
 exports.validateSignUpData = (data) => {
 	let errors = {};
 
@@ -33,6 +32,7 @@ exports.validateSignUpData = (data) => {
   } 
 }
 
+// Login Validation
 exports.validateLoginData = (data) => {
   let errors = {};
 
@@ -43,4 +43,20 @@ exports.validateLoginData = (data) => {
     errors,
     valid: Object.keys(errors).length === 0 ? true : false
   } 
+}
+
+// UserDetails Validation
+exports.reduceUserDetails = (data) => {
+	let userDetails = {};
+
+	if(!isEmpty(data.bio.trim())) userDetails.bio = data.bio;
+	if(!isEmpty(data.website.trim())){
+		// add http:// if necessary
+		if(data.website.trim().substring(0, 4) !== 'http'){
+			userDetails.website = `http://${data.website.trim()}`;
+		} else userDetails.website = data.website;
+	}
+	if(!isEmpty(data.location.trim())) userDetails.location = data.location
+
+	return userDetails;
 }
