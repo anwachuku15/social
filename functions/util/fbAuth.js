@@ -16,7 +16,6 @@ module.exports = (req, res, next) => {
 		// attach token to req.user
 		.then(decodedToken => {
 			req.user = decodedToken;
-			console.log(decodedToken);
 			return db
 				.collection('users')
 				.where('userId', '==', req.user.uid)

@@ -1,4 +1,4 @@
-// Connect this App to firestore
+// Connect this App to firebase admin SDK
 const admin = require('firebase-admin');
 admin.initializeApp();
 const db = admin.firestore();
