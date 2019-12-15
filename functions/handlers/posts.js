@@ -83,7 +83,6 @@ exports.commentOnPost = (req, res) => {
 	// Client-side validation could just disable submit button if empty
 	if(req.body.body.trim() === '') return res.status(400).json({ error: 'Must not be empty'});
 
-	const postDocument = db.doc(`/posts/${req.params.postId}`);
 	const newComment = {
 		body: req.body.body,
 		createdAt: new Date().toISOString(),
@@ -91,23 +90,18 @@ exports.commentOnPost = (req, res) => {
 		userHandle: req.user.handle,
 		userImage: req.user.imageUrl
 	}
-	let postData;
 
-	postDocument
+	db.doc(`/posts/${req.params.postId}`)
 		.get()
 		.then(doc => {
 			if(!doc.exists){
 				return res.status(404).json({ error: 'Post does not exist' });
-			} else {
-				// Add newComment document
-				postData = doc.data();
-				postData.postId = doc.id;
-				return db.collection('comments').add(newComment);
 			}
+			return doc.ref.update({ commentCount: doc.data().commentCount + 1 }); 
+			
 		})
 		.then(() => {
-			postData.commentCount++;
-			return postDocument.update({ commentCount: postData.commentCount });
+			return db.collection('comments').add(newComment);
 		})
 		.then(() => {
 			res.json(newComment);
