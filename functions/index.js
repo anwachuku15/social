@@ -11,7 +11,7 @@ const { signup,
         getAuthenticatedUser
 } = require('./handlers/users');
 
-// Protected routes include fbAuth
+
 
 // POSTS ROUTES
 app.get('/posts', getPosts)
@@ -22,10 +22,7 @@ app.post('/signup', signup)
 app.post('/login', login)
 app.post('/user/image', fbAuth, uploadImage)
 app.post('/user', fbAuth, addUserDetails)
-app.post('/user', fbAuth, getAuthenticatedUser);
-
-
-
+app.get('/user', fbAuth, getAuthenticatedUser)
 
 
 // Best practices for having API - https://baseurl.com/api/{enter_here}

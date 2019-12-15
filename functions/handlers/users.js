@@ -115,8 +115,20 @@ exports.getAuthenticatedUser = (req, res) => {
     .get()
     .then(doc => {
       if(doc.exists){
-        userData.
+        userData.credentials = doc.data();
+        return db.collection('likes').where('userHandle', '==', req.user.handle).get()
       }
+    })
+    .then(data => {
+      userData.likes = [];
+      data.forEach(doc => {
+        userData.likes.push(doc.data());
+      });
+      return res.json(userData);
+    })
+    .catch(err => {
+      console.error(err);
+      return res.status(500).json({ error: err.code})
     })
 }
 
