@@ -90,10 +90,12 @@ exports.login = (req, res) => {
 			console.error(err);
 			if(err.code === 'auth/wrong-password'){
 				return res.status(403).json({ general: 'Wrong email / password combination, please try again'})
-			} else return res.status(500).json({ error: err.code });
+			} else if(err.code === 'auth/invalid-email'){
+        return res.status(403).json({ general: 'Please enter a valid email address'})
+      } else return res.status(500).json({ error: err.code });
 		});
 };
-
+ 
 // ADD USER DETAILS
 exports.addUserDetails = (req, res) => {
   let userDetails = reduceUserDetails(req.body);

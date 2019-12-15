@@ -22,9 +22,10 @@ module.exports = (req, res, next) => {
 				.limit(1)
 				.get();
 		})
-		// attach user handle to req.user
+		// attach user handle and profile picture to req.user
 		.then(data => {
 			req.user.handle = data.docs[0].data().handle;
+			req.user.imageUrl = data.docs[0].data().imageUrl;
 			return next();
 		})
 		.catch(err => {
