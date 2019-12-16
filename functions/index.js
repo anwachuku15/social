@@ -16,7 +16,9 @@ const { signup,
         login, 
         uploadImage,
         addUserDetails,
-        getAuthenticatedUser
+        getAuthenticatedUser,
+        getUserDetails,
+        markAllNotificationsRead
 } = require('./handlers/users');
 
 
@@ -40,6 +42,9 @@ app.post('/login', login)
 app.post('/user/image', fbAuth, uploadImage)
 app.post('/user', fbAuth, addUserDetails)
 app.get('/user', fbAuth, getAuthenticatedUser)
+// Not front end routes
+app.get('/user/:handle', getUserDetails);
+app.post('/notifications', fbAuth, markAllNotificationsRead)
 
 
 // Best practices for having API - https://baseurl.com/api/{enter_here}
@@ -47,10 +52,9 @@ exports.api = functions.https.onRequest(app);
 
 
 // DATABASE TRIGGERS - must deploy after creating triggers
-
-// Listen for creation of like document
-exports.createNotificationOnLike = functions.firestore.document('likes/{id}')
-  // Snapshot of the new like document (sender's snapshot)
+exports.createNotificationOnLike = functions
+  .firestore
+  .document('likes/{id}')
   .onCreate((snapshot) => {
     db.doc(`/posts/${snapshot.data().postId}`)
       .get()
@@ -75,8 +79,9 @@ exports.createNotificationOnLike = functions.firestore.document('likes/{id}')
       });
   });
 
-// Listen for the deletion of a like document
-exports.deleteNotificationOnUnLike = functions.firestore.document('likes/{id}')
+exports.deleteNotificationOnUnLike = functions
+  .firestore
+  .document('likes/{id}')
   .onDelete((snapshot) => {
     db.doc(`/notifications/${snapshot.id}`)
       .delete()
@@ -89,7 +94,9 @@ exports.deleteNotificationOnUnLike = functions.firestore.document('likes/{id}')
       })
   })
 
-exports.createNotificationOnComment = functions.firestore.document('comments/{id}')
+exports.createNotificationOnComment = functions
+  .firestore
+  .document('comments/{id}')
   .onCreate((snapshot) => {
     db.doc(`/posts/${snapshot.data().postId}`)
       .get()
