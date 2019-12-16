@@ -81,7 +81,7 @@ exports.getPost = (req, res) => {
 
 exports.commentOnPost = (req, res) => {
 	// Client-side validation could just disable submit button if empty
-	if(req.body.body.trim() === '') return res.status(400).json({ error: 'Must not be empty'});
+	if(req.body.body.trim() === '') return res.status(400).json({ comment: 'Must not be empty'});
 
 	const newComment = {
 		body: req.body.body,
@@ -141,7 +141,8 @@ exports.likePost = (req, res) => {
 				return db.collection('likes').add({
 					postId: req.params.postId,
 					userHandle: req.user.handle,
-					createdAt: new Date().toISOString()
+					createdAt: new Date().toISOString(),
+					userImage: req.user.imageUrl
 				})
 				.then(() => {
 					// add a like then update postDocument's likeCount

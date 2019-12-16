@@ -61,7 +61,7 @@ exports.signup = (req, res) => {
 			if(err.code === 'auth/email-already-in-use'){
 				return res.status(400).json({ email: 'Email is already in use'})
 			} else {
-				return res.status(500).json({ error: err.code });
+				return res.status(500).json({ general: 'Something went wrong. Please try again.' });
 			}
 		})
 }
@@ -92,7 +92,7 @@ exports.login = (req, res) => {
 				return res.status(403).json({ general: 'Wrong email / password combination, please try again'})
 			} else if(err.code === 'auth/invalid-email'){
         return res.status(403).json({ general: 'Please enter a valid email address'})
-      } else return res.status(500).json({ error: err.code });
+      } else return res.status(500).json({ general: 'Wrong credentials, please try again'});
 		});
 };
  
@@ -110,6 +110,7 @@ exports.addUserDetails = (req, res) => {
     })
 }
 
+// GET SELECTED USER DETAILS
 exports.getUserDetails = (req, res) => {
   let userData = {};
   db.doc(`/users/${req.params.handle}`)
