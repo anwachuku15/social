@@ -27,7 +27,7 @@ exports.createPost = (req, res) => {
 
 	const newPost = {
 		body: req.body.body,
-		// userHandle is passed through MIDDLEWARE
+		// userHandle/userImage passed through MIDDLEWARE
 		userHandle: req.user.handle,
 		userImage: req.user.imageUrl,
 		createdAt: new Date().toISOString(),

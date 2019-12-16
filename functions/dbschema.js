@@ -30,6 +30,16 @@ let db = {
       body: 'great post!',
       createdAt: '2019-12-15T10:59:52.798Z'
     }
+  ],
+  notifications: [
+    {
+      recipient: 'user',
+      sender: 'john',
+      read: 'true | false',
+      postId: 'asdfjalsdfasdf',
+      type: 'like | comment',
+      createdAt: '2019-12-15T10:59:52.798Z'
+    }
   ]
 };
 const userDetails = {
