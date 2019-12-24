@@ -90,15 +90,16 @@ exports.commentOnPost = (req, res) => {
 		userHandle: req.user.handle,
 		userImage: req.user.imageUrl
 	}
-
+	let postData;
 	db.doc(`/posts/${req.params.postId}`)
 		.get()
 		.then(doc => {
 			if(!doc.exists){
 				return res.status(404).json({ error: 'Post does not exist' });
+			} else {
+				postData = doc.data();
+				return doc.ref.update({ commentCount: postData.commentCount + 1 }); 
 			}
-			return doc.ref.update({ commentCount: doc.data().commentCount + 1 }); 
-			
 		})
 		.then(() => {
 			return db.collection('comments').add(newComment);
@@ -135,9 +136,8 @@ exports.likePost = (req, res) => {
 			}
 		})
 		.then(data => {
-			// data returned: if empty, then user hasn't liked the post yet
 			if(data.empty){
-				// add like to likes collection
+				// add like to likes collection and connect it to that post
 				return db.collection('likes').add({
 					postId: req.params.postId,
 					userHandle: req.user.handle,
