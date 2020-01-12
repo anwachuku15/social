@@ -3,6 +3,11 @@ const app = require('express')();
 const fbAuth = require('./util/fbAuth');
 const { db } = require('./util/admin');
 
+// DEPLOYMENT
+// adds headers that tells app to give these resources to anyone that requests them
+const cors = require('cors');
+app.use(cors());
+
 const { getPosts, 
         createPost,
         getPost ,
