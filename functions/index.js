@@ -23,7 +23,9 @@ const { signup,
         addUserDetails,
         getAuthenticatedUser,
         getUserDetails,
-        markAllNotificationsRead
+        markAllNotificationsRead,
+        followUser,
+        unfollowUser
 } = require('./handlers/users');
 
 
@@ -49,8 +51,9 @@ app.post('/user', fbAuth, addUserDetails)
 app.get('/user', fbAuth, getAuthenticatedUser)
 // Not front end routes
 app.get('/user/:handle', getUserDetails);
-app.post('/notifications', fbAuth, markAllNotificationsRead)
-
+app.post('/notifications', fbAuth, markAllNotificationsRead);
+app.get('/follow/:handle', fbAuth, followUser);
+app.get('/unfollow/:handle', fbAuth, unfollowUser);
 
 // Best practices for having API - https://baseurl.com/api/{enter_here}
 exports.api = functions.https.onRequest(app);
@@ -60,7 +63,6 @@ exports.api = functions.https.onRequest(app);
 exports.createNotificationOnLike = functions
   .firestore
   .document('likes/{id}')
-  // snapshot refers to like; doc refers to post
   .onCreate((snapshot) => {
     return db.doc(`/posts/${snapshot.data().postId}`)
       .get()
@@ -114,6 +116,16 @@ exports.createNotificationOnComment = functions
         console.error(err);
       });
   });
+
+
+// exports.createNotificationOnFollow = functions
+//   .firestore
+//   .document('follows/{id}')
+//   .onCreate((snapshot) => {
+//     return 
+//   })
+
+
 
 // DB Trigger: when user changes profile pic, change all documents that include user's profile pic
 exports.onUserImageChange = functions

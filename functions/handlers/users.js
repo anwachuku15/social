@@ -46,7 +46,9 @@ exports.signup = (req, res) => {
 			token = idToken;
 			const userCredentials = {
 				handle: newUser.handle,
-				email: newUser.email,
+        email: newUser.email,
+        following: 0,
+        followers: 0,
         createdAt: new Date().toISOString(),
         imageUrl: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${noImg}?alt=media`,
 				userId
@@ -146,6 +148,108 @@ exports.getUserDetails = (req, res) => {
     })
 }
 
+// FOLLOW SELECTED USER
+exports.followUser = (req, res) => {
+  let followData;
+  // Consider rewriting this code similar to likePosts (posts.js:118)...
+  // and compare runtimes
+  db.collection(`/follows/`)
+    .where('follower', '==', req.user.handle)
+    .where('followed', '==', req.params.handle)
+    .limit(1)
+    .get()
+    .then(data => {
+      if(!data.empty){
+        return res.status(400).json({ error: 'You already follow this user' });
+      } else {
+        return db.collection('follows').add({
+          followed: req.params.handle,
+          follower: req.user.handle,
+          dateFollowed: new Date().toISOString()
+        })
+        .then(() => {
+          let followerData;
+          db.doc(`/users/${req.user.handle}`)
+            .get()
+            .then(doc => {
+              followerData = doc.data();
+              if(!followerData.following){
+                followerData.following = 1
+              } else {
+                followerData.following++;
+              }
+              return doc.ref.update({following: followerData.following})
+            })
+        })
+        .then(() => {
+          let followedData;
+          db.doc(`/users/${req.params.handle}`)
+            .get()
+            .then(doc => {
+              followedData = doc.data();
+              if(!followedData.followers){
+                followedData.followers = 1
+              } else {
+                followedData.followers++;
+              }
+              return doc.ref.update({ followers: followedData.followers })
+            })
+        })
+        .then(() => {
+          return res.status(200).json({ message: 'Successfully followed '})
+        })
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: err.code})
+    })
+}
+// UNFOLLOW SELECTED USER
+exports.unfollowUser = (req, res) => {
+  let unfollowData;
+  let userData;
+  db.collection(`/follows/`)
+    .where('follower', '==', req.user.handle)
+    .where('followed', '==', req.params.handle)
+    .limit(1)
+    .get()
+    .then(data => {
+      if(data.empty){
+        return res.status(400).json({ error: 'You don\'t follow this user' });
+      } else {
+        return db.doc(`/follows/${data.docs[0].id}`)
+          .delete()
+          .then(() => {
+            let followerData;
+            db.doc(`/users/${req.user.handle}`)
+              .get()
+              .then(doc => {
+                followerData = doc.data();
+                followerData.following--;
+                return doc.ref.update({following: followerData.following})
+              })
+          })
+          .then(() => {
+            let unfollowedData;
+            db.doc(`/users/${req.params.handle}`)
+            .get()
+            .then(doc => {
+              unfollowData = doc.data();
+              unfollowData.followers--;
+              return doc.ref.update({followers: unfollowData.followers})
+            })
+          })
+      }
+    })
+    .then(() => {
+      return res.status(200).json({ message: 'Successfully unfollowed'})
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: err.code})
+    })
+}
 // GET OWN USER DETAILS 
 exports.getAuthenticatedUser = (req, res) => {
   let userData = {};
@@ -155,6 +259,9 @@ exports.getAuthenticatedUser = (req, res) => {
       if(doc.exists){
         userData.credentials = doc.data();
         return db.collection('likes').where('userHandle', '==', req.user.handle).get()
+
+        // This returns who the logged-in User is following
+        // return db.collection('follows').where('follower', '==', req.user.handle).get()
       }
     })
     .then(data => {
@@ -259,3 +366,4 @@ exports.markAllNotificationsRead = (req, res) => {
       return res.status(500).json({ error: err.code })
     })
 } 
+

@@ -90,7 +90,9 @@ exports.commentOnPost = (req, res) => {
 		userHandle: req.user.handle,
 		userImage: req.user.imageUrl
 	}
+
 	let postData;
+	
 	db.doc(`/posts/${req.params.postId}`)
 		.get()
 		.then(doc => {

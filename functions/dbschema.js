@@ -12,8 +12,8 @@ let db = {
       website: 'https://user.com',
       location: 'Maryland, US'
     }
-
   ],
+
   posts: [
     {
       userHandle: 'user',
@@ -23,6 +23,7 @@ let db = {
       commentCount: 2
     }
   ],
+
   comments: [
     {
       userHandle: 'user',
@@ -31,6 +32,7 @@ let db = {
       createdAt: '2019-12-15T10:59:52.798Z'
     }
   ],
+
   notifications: [
     {
       recipient: 'user',
@@ -42,6 +44,7 @@ let db = {
     }
   ]
 };
+
 const userDetails = {
   // Redux data: User information held in Redux State to populate profile
   credentials: {
@@ -52,7 +55,9 @@ const userDetails = {
     imageUrl: 'image/dsasdfasdfasd/asdfasdf',
     bio: 'Hello, my name is user, nice to meet you',
     website: 'https://user.com',
-    location: 'Maryland, US'
+    location: 'Maryland, US',
+    following: 2,
+    following: 1
   },
   likes: [
     {
@@ -62,6 +67,24 @@ const userDetails = {
     {
       userHandle: 'user',
       screamId: '3IOnFoQexRcofs5OhBXO'
+    }
+  ],
+
+  following: [
+    {
+      userHandle: 'user'
+    },
+    {
+      userHandle: 'user2'
+    }
+  ],
+
+  followers: [
+    {
+      userHandle: 'user3'
+    },
+    {
+      userHandle: 'user4'
     }
   ]
 }
