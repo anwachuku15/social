@@ -1,5 +1,6 @@
 const { db } = require('../util/admin')
 
+// fetch all posts from all users
 exports.getPosts = (req, res) => {
 	db.collection('posts')
 		.orderBy('createdAt', 'desc')
@@ -19,6 +20,7 @@ exports.getPosts = (req, res) => {
 		})
 		.catch(err => console.error(err));
 }
+
 
 exports.createPost = (req, res) => {
 	if (req.body.body.trim() === '') {
@@ -50,6 +52,7 @@ exports.createPost = (req, res) => {
 
 }
 
+// fetch single post and its comments/likes
 exports.getPost = (req, res) => {
 	let postData = {};
 	db.doc(`/posts/${req.params.postId}`).get()

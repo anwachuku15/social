@@ -8,3 +8,5 @@ module.exports = {
   appId: "1:90837447855:web:ad36dae6562b6fa3a8d05a",
   measurementId: "G-2XEB4Q5QHP"
 };
+
+// For security, gitignore

@@ -151,8 +151,9 @@ exports.getUserDetails = (req, res) => {
 // FOLLOW SELECTED USER
 exports.followUser = (req, res) => {
   let followData;
-  // Consider rewriting this code similar to likePosts (posts.js:118)...
-  // and compare runtimes
+  /*TODO: Consider rewriting this code similar to likePosts (posts.js:118)...
+  and compare runtimes*/
+  
   db.collection(`/follows/`)
     .where('follower', '==', req.user.handle)
     .where('followed', '==', req.params.handle)
@@ -295,6 +296,8 @@ exports.getAuthenticatedUser = (req, res) => {
 
 // UPLOAD USER PROFILE IMAGE
 exports.uploadImage = (req, res) => {
+  // https://github.com/mscdex/busboy
+
   const BusBoy = require('busboy');
   const path = require('path');
   const os = require('os');
@@ -312,6 +315,7 @@ exports.uploadImage = (req, res) => {
     console.log(fieldname);
     console.log(filename);
     console.log(mimetype);
+    
     // get image file type
     const imageExtension = filename.split('.')[filename.split('.').length - 1]
     imageFileName = `${Math.round(Math.random() * 100000000000)}.${imageExtension}`

@@ -1,4 +1,4 @@
-// Firebase charges you based on number of reads, so best practice is to minimize reads
+// Firebase charges you based on number of reads, so BEST PRACTICE: MINIMIZE READS
 
 let db = {
   users: [
@@ -42,7 +42,16 @@ let db = {
       type: 'like | comment',
       createdAt: '2019-12-15T10:59:52.798Z'
     }
+  ],
+
+  follows: [
+    {
+      dateFollowed: '2020-01-21T18:20:40.954Z',
+      followed: 'user',
+      follower: 'user2'
+    }
   ]
+
 };
 
 const userDetails = {
@@ -56,8 +65,8 @@ const userDetails = {
     bio: 'Hello, my name is user, nice to meet you',
     website: 'https://user.com',
     location: 'Maryland, US',
-    following: 2,
-    following: 1
+    following: 0,
+    following: 0
   },
   likes: [
     {
@@ -67,24 +76,6 @@ const userDetails = {
     {
       userHandle: 'user',
       screamId: '3IOnFoQexRcofs5OhBXO'
-    }
-  ],
-
-  following: [
-    {
-      userHandle: 'user'
-    },
-    {
-      userHandle: 'user2'
-    }
-  ],
-
-  followers: [
-    {
-      userHandle: 'user3'
-    },
-    {
-      userHandle: 'user4'
     }
   ]
 }

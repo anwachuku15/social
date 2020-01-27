@@ -3,8 +3,8 @@ const app = require('express')();
 const fbAuth = require('./util/fbAuth');
 const { db } = require('./util/admin');
 
-// DEPLOYMENT
-// adds headers that tells app to give these resources to anyone that requests them
+// TODO: Add Gmail, Facebook, Twitter auth/sign-in methods
+
 const cors = require('cors');
 app.use(cors());
 
@@ -40,7 +40,7 @@ app.get('/post/:postId/unlike', fbAuth, unlikePost)
 app.post('/post/:postId/comment', fbAuth, commentOnPost)
 // TODO: like comment
 // TODO: unlike comment
-// TODO: comment on comment, etc
+// TODO: comment on comment i.e. Twitter
 
 
 // USERS ROUTES
@@ -55,7 +55,7 @@ app.post('/notifications', fbAuth, markAllNotificationsRead);
 app.get('/follow/:handle', fbAuth, followUser);
 app.get('/unfollow/:handle', fbAuth, unfollowUser);
 
-// Best practices for having API - https://baseurl.com/api/{enter_here}
+// Best practice for API routing - https://baseurl.com/api/{enter_here}
 exports.api = functions.https.onRequest(app);
 
 
@@ -117,6 +117,7 @@ exports.createNotificationOnComment = functions
       });
   });
 
+// TODO: FOLLOW NOTIFICATIONS
 
 // exports.createNotificationOnFollow = functions
 //   .firestore
