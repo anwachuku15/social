@@ -5,6 +5,7 @@ const { db } = require('./util/admin');
 
 // TODO: Add Gmail, Facebook, Twitter auth/sign-in methods
 
+// API / Middleware
 const cors = require('cors');
 app.use(cors());
 
