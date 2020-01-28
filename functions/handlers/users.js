@@ -52,7 +52,8 @@ exports.signup = (req, res) => {
         createdAt: new Date().toISOString(),
         imageUrl: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${noImg}?alt=media`,
 				userId
-			};
+      };
+      
 			return db.doc(`/users/${newUser.handle}`).set(userCredentials);
 		}))
 		.then(() => {

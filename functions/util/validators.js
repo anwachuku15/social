@@ -12,6 +12,12 @@ const isEmail = (email) => {
 	else return false;
 };
 
+const hasWhitespace = (handle) => {
+	const regEx = /^[\S]+$/gm
+	if(handle.match(regEx)) return false;
+	else return true;
+};
+
 // Sign Up Validation
 exports.validateSignUpData = (data) => {
 	let errors = {};
@@ -25,12 +31,14 @@ exports.validateSignUpData = (data) => {
 	if(isEmpty(data.password)) errors.password = 'Must not be empty';
 	if(data.password !== data.confirmPassword) errors.confirmPassword = 'Passwords must match';
 	if(isEmpty(data.handle)) errors.handle = 'Must not be empty';
+	if(hasWhitespace(data.handle)) errors.handle = 'No spaces allowed';
 
   return {
     errors,
     valid: Object.keys(errors).length === 0 ? true : false
-  } 
+	} 
 }
+
 
 // Login Validation
 exports.validateLoginData = (data) => {
