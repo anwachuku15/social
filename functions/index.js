@@ -26,7 +26,9 @@ const { signup,
         getUserDetails,
         markAllNotificationsRead,
         followUser,
-        unfollowUser
+        unfollowUser,
+        getFollowers,
+        // getFollowing,
 } = require('./handlers/users');
 
 
@@ -39,10 +41,6 @@ app.delete('/post/:postId', fbAuth, deletePost)
 app.get('/post/:postId/like', fbAuth, likePost)
 app.get('/post/:postId/unlike', fbAuth, unlikePost)
 app.post('/post/:postId/comment', fbAuth, commentOnPost)
-// TODO: like comment
-// TODO: unlike comment
-// TODO: comment on comment i.e. Twitter
-
 
 // USERS ROUTES
 app.post('/signup', signup)
@@ -50,6 +48,8 @@ app.post('/login', login)
 app.post('/user/image', fbAuth, uploadImage)
 app.post('/user', fbAuth, addUserDetails)
 app.get('/user', fbAuth, getAuthenticatedUser)
+app.get('/:handle/followers', getFollowers) //Consider auth route
+// app.get('/:handle/following', getFollowing) //Consider auth route
 // Not front end routes
 app.get('/user/:handle', getUserDetails);
 app.post('/notifications', fbAuth, markAllNotificationsRead);

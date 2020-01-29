@@ -167,6 +167,7 @@ exports.followUser = (req, res) => {
         return db.collection('follows').add({
           followed: req.params.handle,
           follower: req.user.handle,
+          followerImage: req.user.imageUrl,
           dateFollowed: new Date().toISOString()
         })
         .then(() => {
@@ -250,6 +251,29 @@ exports.unfollowUser = (req, res) => {
     .catch(err => {
       console.error(err);
       res.status(500).json({ error: err.code})
+    })
+}
+
+exports.getFollowers = (req, res) => {
+  let followerData = {};
+
+  // get everyone who follows req.params.handle
+  db.collection(`/follows/`)
+    .where('followed', '==', req.params.handle)
+    .get()
+    .then(data => {
+      followerData.followers = [];
+      data.forEach(doc => {
+        followerData.followers.push({
+          followerHandle: doc.data().follower,
+          followerImage: doc.data().followerImage
+        })
+      })
+      return res.json(followerData)
+    })
+    .catch(err => {
+      console.error(err);
+      return res.status(500).json({ error: err.code })
     })
 }
 // GET OWN USER DETAILS 
