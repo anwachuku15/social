@@ -61,6 +61,8 @@ exports.api = functions.https.onRequest(app);
 
 
 // DATABASE TRIGGERS - must deploy after creating triggers
+
+// Like Notification
 exports.createNotificationOnLike = functions
   .firestore
   .document('likes/{id}')
@@ -84,6 +86,7 @@ exports.createNotificationOnLike = functions
       });
   });
 
+// Remove like notification when unliked
 exports.deleteNotificationOnUnLike = functions
   .firestore
   .document('likes/{id}')
@@ -95,6 +98,7 @@ exports.deleteNotificationOnUnLike = functions
       })
   })
 
+// Comment Notification
 exports.createNotificationOnComment = functions
   .firestore
   .document('comments/{id}')
