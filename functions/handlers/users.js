@@ -73,7 +73,7 @@ exports.login = (req, res) => {
 		email: req.body.email,
 		password: req.body.password
   };
-  
+
   // VALIDATION
   const { valid, errors } = validateLoginData(user);
   if(!valid) return res.status(400).json(errors);
@@ -96,6 +96,30 @@ exports.login = (req, res) => {
       } else return res.status(500).json({ general: 'Wrong credentials, please try again'});
 		});
 };
+
+// FACEBOOK LOGIN
+// exports.facebookLogin = (req, res) => {
+//   let token, userId, handle;
+  
+//   var facebook = new firebase.auth.FacebookAuthProvider();
+//   facebook.setCustomParameters({
+//     'display': 'popup'
+//   })
+//   firebase
+//     .auth()
+//     .signInWithPopup(facebook)
+//     .then(res => {
+//       return res.user.getIdToken()
+//     })
+//     .then(token => {
+//       console.log(token)
+//       return res.json({token})
+//     })
+//     .catch(err => {
+//       console.error(err)
+//     })
+// }
+
  
 // ADD USER DETAILS
 exports.addUserDetails = (req, res) => {

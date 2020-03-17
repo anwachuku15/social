@@ -1,5 +1,6 @@
 const functions = require('firebase-functions');
 const app = require('express')();
+
 const fbAuth = require('./util/fbAuth');
 const { db } = require('./util/admin');
 
@@ -19,7 +20,8 @@ const { getPosts,
 } = require('./handlers/posts');
 
 const { signup, 
-        login, 
+        login,
+        facebookLogin,
         uploadImage,
         addUserDetails,
         getAuthenticatedUser,
@@ -45,6 +47,7 @@ app.post('/post/:postId/comment', fbAuth, commentOnPost)
 // USERS ROUTES
 app.post('/signup', signup)
 app.post('/login', login)
+// app.get('/facebookLogin', facebookLogin)
 app.post('/user/image', fbAuth, uploadImage)
 app.post('/user', fbAuth, addUserDetails)
 app.get('/user', fbAuth, getAuthenticatedUser)
