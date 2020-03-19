@@ -47,17 +47,19 @@ app.post('/post/:postId/comment', fbAuth, commentOnPost)
 // USERS ROUTES
 app.post('/signup', signup)
 app.post('/login', login)
-// app.get('/facebookLogin', facebookLogin)
 app.post('/user/image', fbAuth, uploadImage)
 app.post('/user', fbAuth, addUserDetails)
 app.get('/user', fbAuth, getAuthenticatedUser)
 app.get('/:handle/followers', getFollowers) //Consider auth route
 // app.get('/:handle/following', getFollowing) //Consider auth route
+
 // Not front end routes
 app.get('/user/:handle', getUserDetails);
 app.post('/notifications', fbAuth, markAllNotificationsRead);
 app.get('/follow/:handle', fbAuth, followUser);
 app.get('/unfollow/:handle', fbAuth, unfollowUser);
+
+
 
 // Best practice for API routing - https://baseurl.com/api/{enter_here}
 exports.api = functions.https.onRequest(app);
