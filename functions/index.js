@@ -65,8 +65,10 @@ app.get('/unfollow/:handle', fbAuth, unfollowUser);
 exports.api = functions.https.onRequest(app);
 
 
-// DATABASE TRIGGERS - must deploy after creating triggers
 
+
+
+// DATABASE TRIGGERS - must deploy after creating triggers
 // Like Notification
 exports.createNotificationOnLike = functions
   .firestore
